@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Weather Search</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="card">
+      <div class="search">
+        <input id="cityInput" type="text" placeholder="Enter city name" spellcheck="false">
+        <button><img src="search.png"></button>
+      </div>
+      <div class="weather">
+        <img src="download.png" alt="image" class="weather-icon" height="100px">
+        <h1 class="temp">22°C</h1>
+        <h2 class="city">New York</h2>
+        <div class="details">
+          <div class="col">
+            <img src="download (1).png">
+            <div>
+              <p class="humidity">50%</p>
+              <p>Humidity</p>
+            </div>
+          </div>
+          <div class="col">
+            <img src="wind.png">
+            <div>
+              <p class="wind">50 Km/h</p>
+              <p>Wind Speed</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const apiKey = "b8a7827a7263864b8735e0ac4b077895"; 
+      //This line defines a constant variable apiKey and assigns it your OpenWeatherMap API key. This key will be used to authenticate your requests to the weather API.
+
+      const apiUrl = `https://api.openweathermap.org/data/2.5/weather?units=metric&q=`;
+      //This line defines a constant variable apiUrl and assigns it the base URL of the OpenWeatherMap API. It specifies that you want to fetch weather data in metric units and leaves a placeholder q= for the city name.
+
+      const searchBox = document.querySelector(".search input");
+      const searchBtn = document.querySelector(".search button");
+      //These lines select the input element with the class "search" and the button element within the same "search" container using the document.querySelector method. The selected elements are stored in the variables searchBox and searchBtn, respectively.
+
+      async function checkWeather(city) {
+        //This line defines an asynchronous function named checkWeather, which takes a city parameter. This function will be responsible for fetching and displaying weather data for the specified city.
+        const response = await fetch(`${apiUrl}${city}&appid=${apiKey}`);
+        //this line uses the fetch function to send a GET request to the OpenWeatherMap API. It constructs the URL by combining the apiUrl, the city parameter, and the apiKey. The await keyword is used to pause the function until the API response is received.
+        const data = await response.json();
+        //This line awaits the JSON response from the API and stores it in the data variable. It parses the JSON response into a JavaScript object.
+        console.log(data);
+        //This line logs the received weather data to the browser's console for debugging purposes.
+
+        document.querySelector(".city").textContent = data.name;
+        document.querySelector(".temp").textContent = `${Math.round(data.main.temp)}°C`;
+        document.querySelector(".humidity").textContent = `${data.main.humidity}%`;
+        document.querySelector(".wind").textContent = `${data.wind.speed} km/h`;
+      }
+
+      searchBtn.addEventListener("click", () => {
+        checkWeather(searchBox.value);
+      });
+      //This line adds an event listener to the "click" event of the searchBtn (the search button). When the button is clicked, it triggers the checkWeather function with the value entered in the searchBox (the input field) as the city parameter. This allows users to search for weather data by clicking the button.
+    </script>
+  </body>
+</html>
